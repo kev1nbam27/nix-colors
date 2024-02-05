@@ -36,17 +36,17 @@ import (pkgs.stdenv.mkDerivation {
     END
     )
 
-    rm -rf $HOME/.config/wpg $HOME/.cache/wal
-    light=$([[ "${variant}" = "light" ]] && echo "--light")
-    wpg $light -a "${path}" &> /dev/null
-    wpg $light -A "$(wpg -l)" &> /dev/null
-    echo "$template" > $HOME/.config/wpg/templates/color-scheme.nix.base
-    chmod --quiet 400 /dev/pts/*
-    wpg -n --noreload -s "$(wpg -l)" &> /dev/null
-    chmod --quiet 620 /dev/pts/*
+    # rm -rf $HOME/.config/wpg $HOME/.cache/wal
+    # light=$([[ "${variant}" = "light" ]] && echo "--light")
+    # wpg $light -a "${path}" &> /dev/null
+    # wpg $light -A "$(wpg -l)" &> /dev/null
+    # echo "$template" > $HOME/.config/wpg/templates/color-scheme.nix.base
+    # chmod --quiet 400 /dev/pts/*
+    # wpg -n --noreload -s "$(wpg -l)" &> /dev/null
+    # chmod --quiet 620 /dev/pts/*
 
-    cat $HOME/.config/wpg/templates/color-scheme.nix > default.nix
-    rm -rf $HOME/.config/wpg $HOME/.cache/wal
+    # cat $HOME/.config/wpg/templates/color-scheme.nix > default.nix
+    # rm -rf $HOME/.config/wpg $HOME/.cache/wal
   '';
   installPhase = "mkdir -p $out && cp default.nix $out";
 })
