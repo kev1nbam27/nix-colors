@@ -6,7 +6,7 @@
 }:
 import (pkgs.stdenv.mkDerivation {
   name = "generated-colorscheme";
-  buildInputs = with pkgs; [ flavours ];
+  buildInputs = with pkgs; [ wpgtk ];
   unpackPhase = "true";
   buildPhase = ''
     template=$(cat <<-END
@@ -15,29 +15,38 @@ import (pkgs.stdenv.mkDerivation {
       name = "Generated";
       author = "nix-colors";
       palette = {
-        base00 = "{{base00-hex}}";
-        base01 = "{{base01-hex}}";
-        base02 = "{{base02-hex}}";
-        base03 = "{{base03-hex}}";
-        base04 = "{{base04-hex}}";
-        base05 = "{{base05-hex}}";
-        base06 = "{{base06-hex}}";
-        base07 = "{{base07-hex}}";
-        base08 = "{{base08-hex}}";
-        base09 = "{{base09-hex}}";
-        base0A = "{{base0A-hex}}";
-        base0B = "{{base0B-hex}}";
-        base0C = "{{base0C-hex}}";
-        base0D = "{{base0D-hex}}";
-        base0E = "{{base0E-hex}}";
-        base0F = "{{base0F-hex}}";
+        base00 = "{color0}";
+        base01 = "{color1}";
+        base02 = "{color2}";
+        base03 = "{color3}";
+        base04 = "{color4}";
+        base05 = "{color5}";
+        base06 = "{color6}";
+        base07 = "{color7}";
+        base08 = "{color8}";
+        base09 = "{color9}";
+        base0A = "{color10}";
+        base0B = "{color11}";
+        base0C = "{color12}";
+        base0D = "{color13}";
+        base0E = "{color14}";
+        base0F = "{color15}";
       };
     }
     END
     )
 
-    flavours generate "${variant}" "${path}" --stdout | \
-    flavours build <( tee ) <( echo "$template" ) > default.nix
+    rm -rf $HOME/.config/wpg $HOME/.cache/wal
+    light=$([[ "${variant}" = "light" ]] && echo "--light")
+    wpg $light -a "${path}" &> /dev/null
+    wpg $light -A "$(wpg -l)" &> /dev/null
+    echo "$template" > $HOME/.config/wpg/templates/color-scheme.nix.base
+    chmod --quiet 400 /dev/pts/*
+    wpg -n --noreload -s "$(wpg -l)" &> /dev/null
+    chmod --quiet 620 /dev/pts/*
+
+    cat $HOME/.config/wpg/templates/color-scheme.nix > default.nix
+    rm -rf $HOME/.config/wpg $HOME/.cache/wal
   '';
   installPhase = "mkdir -p $out && cp default.nix $out";
 })
