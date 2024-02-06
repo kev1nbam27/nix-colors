@@ -6,15 +6,15 @@
 }:
 import (pkgs.stdenv.mkDerivation {
   name = "generated-colorscheme";
-  buildInputs = with pkgs; [ wpgtk ];
+  buildInputs = with pkgs; [ wpgtk toybox ];
   unpackPhase = "true";
   buildPhase = ''
     template=$(cat <<-END
-    {
+    {{
       slug = "$(basename ${path} | cut -d '.' -f1)-${variant}";
       name = "Generated";
       author = "nix-colors";
-      palette = {
+      palette = {{
         base00 = "{color0}";
         base01 = "{color1}";
         base02 = "{color2}";
@@ -31,22 +31,27 @@ import (pkgs.stdenv.mkDerivation {
         base0D = "{color13}";
         base0E = "{color14}";
         base0F = "{color15}";
-      };
-    }
+      }};
+    }}
     END
     )
 
-    # rm -rf $HOME/.config/wpg $HOME/.cache/wal
-    # light=$([[ "${variant}" = "light" ]] && echo "--light")
-    # wpg $light -a "${path}" &> /dev/null
-    # wpg $light -A "$(wpg -l)" &> /dev/null
-    # echo "$template" > $HOME/.config/wpg/templates/color-scheme.nix.base
+    HOME=/build
+    echo $HOME "$(pwd)" >&2
+    # exit 1
+    light=""
+    [[ "${variant}" = "light" ]] && light="--light"
+    wpg $light -a "${path}" >&2
+    wpg $light -A "$(wpg -l)" >&2
+    echo "$template" > scheme.nix
+    wpg -t -a scheme.nix >&2
     # chmod --quiet 400 /dev/pts/*
-    # wpg -n --noreload -s "$(wpg -l)" &> /dev/null
+    wpg -n --noreload -s "$(wpg -l)" >&2 || true
     # chmod --quiet 620 /dev/pts/*
 
-    # cat $HOME/.config/wpg/templates/color-scheme.nix > default.nix
-    # rm -rf $HOME/.config/wpg $HOME/.cache/wal
+    #echo "$template" >&2
+    cat scheme.nix >&2
+    cat scheme.nix > default.nix
   '';
   installPhase = "mkdir -p $out && cp default.nix $out";
 })
