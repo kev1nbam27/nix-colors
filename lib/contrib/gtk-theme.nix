@@ -40,7 +40,7 @@ pkgs.stdenv.mkDerivation rec {
       BTN_FG=${scheme.palette.base06}
       FG=${scheme.palette.base05}
       BG=${scheme.palette.base00}
-      HDR_BTN_BG=${scheme.palette.base01}
+      HDR_BTN_BG=${scheme.palette.base08}
       HDR_BTN_FG=${scheme.palette.base05}
       ACCENT_BG=${scheme.palette.base0B}
       ACCENT_FG=${scheme.palette.base00}
